@@ -36,9 +36,9 @@ export const Th = styled.th`
     }
 `;
 const Grid = ({ users, setUsers, setOnEdit }) => {
-    // const handleEdit = (item) => {
-    //     setOnEdit(item)
-    // }
+    const handleEdit = (item) => {
+        setOnEdit(item)
+    }
     const handleDelete = async (tar_id) => {
         console.log(tar_id)
         await axios.delete("http://localhost:8800/" + tar_id)
@@ -50,6 +50,14 @@ const Grid = ({ users, setUsers, setOnEdit }) => {
             })
             .catch(({ data }) => toast.error(data))
         setOnEdit(null)
+    }
+    for (let i = 0; i < users.length; i++) {
+        const aux = users[i].tar_datafinal
+        const date = new Date(aux);
+        const formattedDate = date.toLocaleDateString('pt-BR', {
+            day: '2-digit', month: '2-digit', year: 'numeric'
+        });
+        users[i].tar_datafinal = formattedDate
     }
     return (
         <Table>
@@ -68,7 +76,7 @@ const Grid = ({ users, setUsers, setOnEdit }) => {
                         <Td>{item.tar_resp}</Td>
                         <Td>{item.tar_tarefa}</Td>
                         <Td>{item.tar_datafinal}</Td>
-                        {/* <Td width="5%"><FaEdit onClick={() => handleEdit(item)} /></Td> */}
+                        <Td width="5%"><FaEdit onClick={() => handleEdit(item)} /></Td>
                         <Td width="5%"><FaTrash onClick={() => handleDelete(item.tar_id)} /></Td>
                     </Tr>
                 ))}

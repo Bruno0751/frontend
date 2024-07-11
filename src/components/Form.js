@@ -38,69 +38,62 @@ const Button = styled.button`
 const Form = ({ getUsers, onEdit, setOnEdit }) => {
     const ref = useRef()
 
-    // useEffect(() => {
-    //     if (onEdit) {
-    //         const user = ref.current
+    useEffect(() => {
+        if (onEdit) {
+            const user = ref.current
+            user.tar_resp.value = onEdit.tar_resp
+            user.tar_tarefa.value = onEdit.tar_tarefa
+            // const formater = onEdit.tar_datafinal.split('T')[0]
+            user.tar_datafinal.value = onEdit.tar_datafinal
+        }
+    }, [onEdit]);
 
-    //         user.resp.value = onEdit.resp
-    //         user.tarefa.value = onEdit.tarefa
-    //         user.datafinal.value = onEdit.datafinal
-    //     }
-    // }, [onEdit]);
-
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-
-    //     const user = ref.current
-
-    //     if (!user.resp.value || !user.tarefa.value || !user.datafinal.value) {
-    //         return toast.warn("Preencha")
-    //     }
-    //     if (onEdit) {
-    //         await axios.put("http://localhost:8084" + onEdit.id, {
-    //             resp: user.resp.value,
-    //             tarefa: user.resp.tarefa,
-    //             datafinal: user.resp.vdatafinalalue,
-    //         })
-    //         .then(({ data }) => {
-    //             toast.success(data)
-    //         })
-    //         .catch(({ data }) => {
-    //             toast.error(data)
-    //         })
-    //     } else {
-    //         await axios.post("http://localhost:8084", {
-    //             resp: user.resp.value,
-    //             tarefa: user.resp.tarefa,
-    //             datafinal: user.resp.vdatafinalalue,
-    //         })
-    //         .then(({ data }) => {
-    //             toast.success(data)
-    //         })
-    //         .catch(({ data }) => {
-    //             toast.error(data)
-    //         })
-    //     }
-
-    //     user.resp.value = ""
-    //     user.tarefa.value = ""
-    //     user.datafinal.value = ""
-    //     setOnEdit(null)
-    //     getUsers()
-    // }
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const user = ref.current
+        if (!user.tar_resp.value || !user.tar_tarefa.value) {
+            return toast.warn("Preencha")
+        }
+        try {
+            if (onEdit) {
+                console.log(onEdit)
+                const { data } = await axios.put("http://localhost:8800/" + onEdit.tar_id, {
+                    tar_resp: user.tar_resp.value,
+                    tar_tarefa: user.tar_tarefa.value,
+                    datafinal: user.resp.datafinalalue
+                })
+                console.log(data)
+                toast.success(data)
+            } else {
+                const { data } = await axios.post("http://localhost:8800", {
+                    tar_resp: user.tar_resp.value,
+                    tar_tarefa: user.tar_tarefa.value,
+                    tar_datafinal: user.tar_resp.datafinalalue
+                })
+                toast.success(data)
+            }
+        } catch (erro) {
+            toast.error('erro insert')
+        }
+        user.tar_resp.value = ""
+        user.tar_tarefa.value = ""
+        user.tar_datafinal.value = ""
+        setOnEdit(null)
+        getUsers()
+    }
     return (
-        <FormCantainer ref={ref}>
+        <FormCantainer ref={ref} onSubmit={handleSubmit}>
             <InputArea>
                 <Label>Responsavel</Label>
-                <Input name="resp" />
+                <Input name="tar_resp" />
             </InputArea>
             <InputArea>
-                <Label>Responsavel</Label>
-                <Input name="tarefa" />
+                <Label>Tarefa</Label>
+                <Input name="tar_tarefa" />
             </InputArea>
             <InputArea>
-                <Label>Responsavel</Label>
-                <Input name="datafinal" type="data"/>
+                <Label>Data Final</Label>
+                <Input name="tar_datafinal" type="date" />
             </InputArea>
             <Button type="submit">Salvar</Button>
         </FormCantainer>
