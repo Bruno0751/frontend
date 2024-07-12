@@ -3,6 +3,8 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import moment from 'moment';
+import 'moment/locale/pt-br';
 
 const Table = styled.table`
     width: 100%;
@@ -51,14 +53,11 @@ const Grid = ({ users, setUsers, setOnEdit }) => {
             .catch(({ data }) => toast.error(data))
         setOnEdit(null)
     }
-    for (let i = 0; i < users.length; i++) {
-        const aux = users[i].tar_datafinal
-        const date = new Date(aux);
-        const formattedDate = date.toLocaleDateString('pt-BR', {
-            day: '2-digit', month: '2-digit', year: 'numeric'
-        });
-        users[i].tar_datafinal = formattedDate
-    }
+    
+    moment.locale('pt-br');
+    const formatDateBR = (date) => {
+        return moment(date).format('DD/MM/YYYY');
+    };
     return (
         <Table>
             <Thead>
@@ -75,7 +74,7 @@ const Grid = ({ users, setUsers, setOnEdit }) => {
                     <Tr key={i}>
                         <Td>{item.tar_resp}</Td>
                         <Td>{item.tar_tarefa}</Td>
-                        <Td>{item.tar_datafinal}</Td>
+                        <Td>{formatDateBR(item.tar_datafinal)}</Td>
                         <Td width="5%"><FaEdit onClick={() => handleEdit(item)} /></Td>
                         <Td width="5%"><FaTrash onClick={() => handleDelete(item.tar_id)} /></Td>
                     </Tr>

@@ -60,7 +60,7 @@ const Form = ({ getUsers, onEdit, setOnEdit }) => {
                 const { data } = await axios.put("http://localhost:8800/" + onEdit.tar_id, {
                     tar_resp: user.tar_resp.value,
                     tar_tarefa: user.tar_tarefa.value,
-                    datafinal: user.resp.datafinalalue
+                    tar_datafinal: user.tar_datafinal.value
                 })
                 console.log(data)
                 toast.success(data)
@@ -68,8 +68,9 @@ const Form = ({ getUsers, onEdit, setOnEdit }) => {
                 const { data } = await axios.post("http://localhost:8800", {
                     tar_resp: user.tar_resp.value,
                     tar_tarefa: user.tar_tarefa.value,
-                    tar_datafinal: user.tar_resp.datafinalalue
+                    tar_datafinal: user.tar_datafinal.value
                 })
+                console.log(data)
                 toast.success(data)
             }
         } catch (erro) {
